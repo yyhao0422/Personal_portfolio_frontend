@@ -7,7 +7,7 @@ import { urlFor, client } from "../../client";
 
 import "./Work.scss";
 const Work = () => {
-  const [activeFilter, setActiveFilter] = useState("All");
+  const [activeFilter, setActiveFilter] = useState("Highlights");
   const [animateCard, setAnimateCard] = useState({ y: 0, opacity: 1 });
   const [works, setWorks] = useState([]);
   const [filterWork, setFilterWork] = useState([]);
@@ -17,7 +17,7 @@ const Work = () => {
 
     client.fetch(query).then((data) => {
       setWorks(data);
-      setFilterWork(data);
+      setFilterWork(data.filter((data) => data.tags.includes("Highlights")));
     });
   }, []);
 
@@ -27,12 +27,7 @@ const Work = () => {
 
     setTimeout(() => {
       setAnimateCard([{ y: 0, opacity: 1 }]);
-
-      if (item === "All") {
-        setFilterWork(works);
-      } else {
-        setFilterWork(works.filter((work) => work.tags.includes(item)));
-      }
+      setFilterWork(works.filter((work) => work.tags.includes(item)));
     }, 500);
   };
 
@@ -44,19 +39,23 @@ const Work = () => {
       </h2>
 
       <div className="app__work-filter">
-        {["AWS", "Web Development", "Terraform", "Learning", "All"].map(
-          (item, index) => (
-            <div
-              key={index}
-              onClick={() => handleWorkFilter(item)}
-              className={`app__work-filter-item app__flex p-text ${
-                activeFilter === item ? "item-active" : ""
-              }`}
-            >
-              {item}
-            </div>
-          )
-        )}
+        {[
+          "Highlights",
+          "Cloud Project",
+          "Web Development",
+          "DevOps",
+          "Others",
+        ].map((item, index) => (
+          <div
+            key={index}
+            onClick={() => handleWorkFilter(item)}
+            className={`app__work-filter-item app__flex p-text ${
+              activeFilter === item ? "item-active" : ""
+            }`}
+          >
+            {item}
+          </div>
+        ))}
       </div>
 
       <motion.div
